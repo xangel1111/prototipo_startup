@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inversiones PYME - Plataforma de Crowdfunding</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 20px 80px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            opacity: 0.95;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: #667eea;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .benefits {
+            background: #f8f9fa;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .benefit-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .benefit-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2em;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto 50px;
+        }
+
+        .return-schemes {
+            background: white;
+        }
+
+        .schemes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .scheme-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .scheme-card:hover {
+            transform: scale(1.05);
+        }
+
+        .scheme-card h3 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+
+        .scheme-card ul {
+            list-style: none;
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .scheme-card li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .scheme-card li:last-child {
+            border-bottom: none;
+        }
+
+        .projects {
+            background: #f8f9fa;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .project-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+            color: white;
+        }
+
+        .project-content {
+            padding: 25px;
+        }
+
+        .project-content h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        .project-meta {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+        }
+
+        .invest-button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .invest-button:hover {
+            background: #764ba2;
+        }
+
+        .stats {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stat-item h3 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .stat-item p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .hero p {
+                font-size: 1.1em;
+            }
+
+            .section-title {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>Invierte en el Futuro de las PYMES</h1>
+        <p>Una plataforma segura y validada donde puedes diversificar tu portafolio apoyando proyectos empresariales con alto potencial, garantizando transparencia y acceso a oportunidades exclusivas.</p>
+        <a href="#" class="cta-button">Comenzar a Invertir</a>
+    </div>
+
+    <section class="benefits">
+        <div class="container">
+            <h2 class="section-title">¿Por Qué Invertir con Nosotros?</h2>
+            <p class="section-subtitle">Ofrecemos ventajas únicas para inversionistas que buscan oportunidades rentables y seguras</p>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">🛡️</div>
+                    <h3>Seguridad Garantizada</h3>
+                    <p>Todos los proyectos son validados y verificados por nuestro equipo de expertos. Trabajamos con procesos rigurosos de due diligence.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">📊</div>
+                    <h3>Transparencia Total</h3>
+                    <p>Accede a información financiera detallada, reportes periódicos y seguimiento en tiempo real de tus inversiones.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">💼</div>
+                    <h3>Diversificación</h3>
+                    <p>Invierte en múltiples sectores y proyectos desde montos accesibles, minimizando riesgos y maximizando oportunidades.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🎯</div>
+                    <h3>Oportunidades Exclusivas</h3>
+                    <p>Acceso anticipado a proyectos de alto potencial que no encontrarás en otros lugares del mercado.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🤝</div>
+                    <h3>Networking Premium</h3>
+                    <p>Conecta con emprendedores, otros inversionistas y expertos en tu área de interés.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">📈</div>
+                    <h3>Retornos Atractivos</h3>
+                    <p>Múltiples esquemas de retorno adaptados a tu perfil de riesgo y objetivos de inversión.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="return-schemes">
+        <div class="container">
+            <h2 class="section-title">Esquemas de Retorno</h2>
+            <p class="section-subtitle">Elige el modelo de inversión que mejor se adapte a tus objetivos</p>
+            <div class="schemes-grid">
+                <div class="scheme-card">
+                    <h3>🎁 Recompensas</h3>
+                    <p>Recibe beneficios tangibles como productos, servicios o descuentos exclusivos del proyecto que apoyas.</p>
+                    <ul>
+                        <li>✓ Productos exclusivos</li>
+                        <li>✓ Servicios premium</li>
+                        <li>✓ Reconocimiento público</li>
+                        <li>✓ Experiencias únicas</li>
+                    </ul>
+                </div>
+                <div class="scheme-card">
+                    <h3>💰 Participación</h3>
+                    <p>Obtén equity o participación en las ganancias de la empresa según el éxito del proyecto.</p>
+                    <ul>
+                        <li>✓ Participación accionaria</li>
+                        <li>✓ Dividendos periódicos</li>
+                        <li>✓ Derechos de voto</li>
+                        <li>✓ Potencial de revalorización</li>
+                    </ul>
+                </div>
+                <div class="scheme-card">
+                    <h3>🌐 Networking</h3>
+                    <p>Accede a una red exclusiva de contactos empresariales y oportunidades de colaboración estratégica.</p>
+                    <ul>
+                        <li>✓ Eventos exclusivos</li>
+                        <li>✓ Mentoría directa</li>
+                        <li>✓ Colaboraciones estratégicas</li>
+                        <li>✓ Comunidad de inversores</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="projects">
+        <div class="container">
+            <h2 class="section-title">Proyectos Destacados</h2>
+            <p class="section-subtitle">Descubre las oportunidades de inversión más prometedoras</p>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-image">🍃</div>
+                    <div class="project-content">
+                        <h3>EcoPackaging Solutions</h3>
+                        <p>Fabricación de empaques biodegradables para la industria alimentaria. Tecnología patentada con proyección de exportación.</p>
+                        <div class="project-meta">
+                            <span><strong>Meta:</strong> $250,000</span>
+                            <span><strong>Mínimo:</strong> $5,000</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 68%"></div>
+                        </div>
+                        <div class="project-meta">
+                            <span><strong>68%</strong> financiado</span>
+                            <span><strong>15 días</strong> restantes</span>
+                        </div>
+                        <button class="invest-button">Invertir Ahora</button>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">💻</div>
+                    <div class="project-content">
+                        <h3>TechEdu Platform</h3>
+                        <p>Plataforma educativa de programación para Latinoamérica. 50,000 usuarios activos y crecimiento del 200% anual.</p>
+                        <div class="project-meta">
+                            <span><strong>Meta:</strong> $500,000</span>
+                            <span><strong>Mínimo:</strong> $10,000</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 85%"></div>
+                        </div>
+                        <div class="project-meta">
+                            <span><strong>85%</strong> financiado</span>
+                            <span><strong>8 días</strong> restantes</span>
+                        </div>
+                        <button class="invest-button">Invertir Ahora</button>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">🏥</div>
+                    <div class="project-content">
+                        <h3>HealthConnect</h3>
+                        <p>Red de telemedicina que conecta pacientes con especialistas. Contratos con 3 aseguradoras principales.</p>
+                        <div class="project-meta">
+                            <span><strong>Meta:</strong> $350,000</span>
+                            <span><strong>Mínimo:</strong> $7,500</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 42%"></div>
+                        </div>
+                        <div class="project-meta">
+                            <span><strong>42%</strong> financiado</span>
+                            <span><strong>22 días</strong> restantes</span>
+                        </div>
+                        <button class="invest-button">Invertir Ahora</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h3>$12M+</h3>
+                <p>Invertidos en Proyectos</p>
+            </div>
+            <div class="stat-item">
+                <h3>450+</h3>
+                <p>Proyectos Financiados</p>
+            </div>
+            <div class="stat-item">
+                <h3>5,200+</h3>
+                <p>Inversionistas Activos</p>
+            </div>
+            <div class="stat-item">
+                <h3>89%</h3>
+                <p>Tasa de Éxito</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="benefits">
+        <div class="container" style="text-align: center;">
+            <h2 class="section-title">Comienza a Invertir Hoy</h2>
+            <p class="section-subtitle">Únete a miles de inversionistas que ya están diversificando su portafolio con PYMES de alto potencial</p>
+            <a href="#" class="cta-button">Crear Cuenta de Inversionista</a>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Plataforma de Crowdfunding PYME. Todos los derechos reservados.</p>
+        <p style="margin-top: 10px; font-size: 0.9em;">Términos y Condiciones | Política de Privacidad | Contacto</p>
+    </footer>
+
+    <script>
+        // Animación de scroll suave para los botones
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Animación de hover para las tarjetas de proyectos
+        const projectCards = document.querySelectorAll('.project-card');
+        projectCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.boxShadow = '0 10px 30px rgba(102, 126, 234, 0.3)';
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.boxShadow = '0 3px 10px rgba(0,0,0,0.1)';
+            });
+        });
+
+        // Simulación de actualización de progreso
+        const progressBars = document.querySelectorAll('.progress-fill');
+        progressBars.forEach(bar => {
+            const width = bar.style.width;
+            bar.style.width = '0%';
+            setTimeout(() => {
+                bar.style.width = width;
+            }, 500);
+        });
+    </script>
+</body>
+</html>

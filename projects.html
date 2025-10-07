@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorar Proyectos - Crowdfunding PYME</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .filters-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin-bottom: 40px;
+        }
+
+        .filters-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .filters-header h2 {
+            color: #667eea;
+            font-size: 1.5em;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .search-box button {
+            padding: 12px 25px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .search-box button:hover {
+            background: #764ba2;
+        }
+
+        .category-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .category-btn {
+            padding: 10px 25px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 0.95em;
+        }
+
+        .category-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .category-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .additional-filters {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        .filter-group select {
+            padding: 8px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95em;
+            cursor: pointer;
+            background: white;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .results-count {
+            font-size: 1.1em;
+            color: #666;
+        }
+
+        .sort-dropdown {
+            padding: 10px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95em;
+            cursor: pointer;
+            background: white;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+        }
+
+        .project-header {
+            position: relative;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .project-icon {
+            font-size: 5em;
+            opacity: 0.9;
+        }
+
+        .project-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 6px 15px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .project-content {
+            padding: 25px;
+        }
+
+        .project-category {
+            display: inline-block;
+            padding: 5px 12px;
+            background: #f0f4ff;
+            color: #667eea;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .project-title {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .project-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            height: 60px;
+            overflow: hidden;
+        }
+
+        .project-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .progress-section {
+            margin-bottom: 20px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s ease;
+        }
+
+        .project-footer {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            padding: 12px 20px;
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .no-results-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+        }
+
+        .no-results h3 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                max-width: 100%;
+            }
+
+            .category-filters {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Explorar Proyectos</h1>
+        <p>Descubre oportunidades de inversión en PYMES de alto potencial</p>
+    </div>
+
+    <div class="container">
+        <div class="filters-section">
+            <div class="filters-header">
+                <h2>Filtrar Proyectos</h2>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Buscar proyectos...">
+                    <button onclick="filterProjects()">🔍</button>
+                </div>
+            </div>
+
+            <div class="category-filters">
+                <button class="category-btn active" data-category="all" onclick="filterByCategory('all', this)">
+                    Todos
+                </button>
+                <button class="category-btn" data-category="tecnologia" onclick="filterByCategory('tecnologia', this)">
+                    💻 Tecnología
+                </button>
+                <button class="category-btn" data-category="salud" onclick="filterByCategory('salud', this)">
+                    🏥 Salud
+                </button>
+                <button class="category-btn" data-category="sostenibilidad" onclick="filterByCategory('sostenibilidad', this)">
+                    🌱 Sostenibilidad
+                </button>
+                <button class="category-btn" data-category="educacion" onclick="filterByCategory('educacion', this)">
+                    📚 Educación
+                </button>
+                <button class="category-btn" data-category="alimentacion" onclick="filterByCategory('alimentacion', this)">
+                    🍽️ Alimentación
+                </button>
+                <button class="category-btn" data-category="comercio" onclick="filterByCategory('comercio', this)">
+                    🛍️ Comercio
+                </button>
+                <button class="category-btn" data-category="manufactura" onclick="filterByCategory('manufactura', this)">
+                    🏭 Manufactura
+                </button>
+            </div>
+
+            <div class="additional-filters">
+                <div class="filter-group">
+                    <label>Monto mínimo:</label>
+                    <select id="minInvestment" onchange="filterProjects()">
+                        <option value="all">Todos</option>
+                        <option value="1000">$1,000+</option>
+                        <option value="5000">$5,000+</option>
+                        <option value="10000">$10,000+</option>
+                        <option value="25000">$25,000+</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Estado:</label>
+                    <select id="statusFilter" onchange="filterProjects()">
+                        <option value="all">Todos</option>
+                        <option value="activo">Activo</option>
+                        <option value="finalizado">Finalizado</option>
+                        <option value="nuevo">Nuevo</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Retorno:</label>
+                    <select id="returnType" onchange="filterProjects()">
+                        <option value="all">Todos</option>
+                        <option value="recompensa">Recompensas</option>
+                        <option value="participacion">Participación</option>
+                        <option value="networking">Networking</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-header">
+            <div class="results-count" id="resultsCount">24 proyectos encontrados</div>
+            <select class="sort-dropdown" id="sortBy" onchange="sortProjects()">
+                <option value="relevance">Más relevantes</option>
+                <option value="recent">Más recientes</option>
+                <option value="ending">Próximos a finalizar</option>
+                <option value="funded">Más financiados</option>
+                <option value="popular">Más populares</option>
+            </select>
+        </div>
+
+        <div class="projects-grid" id="projectsGrid">
+            <!-- Projects will be loaded here -->
+        </div>
+
+        <div class="no-results" id="noResults" style="display: none;">
+            <div class="no-results-icon">🔍</div>
+            <h3>No se encontraron proyectos</h3>
+            <p>Intenta ajustar los filtros o buscar con otros términos</p>
+        </div>
+    </div>
+
+    <script>
+        const projects = [
+            {
+                id: 1,
+                title: "EcoPackaging Solutions",
+                category: "sostenibilidad",
+                icon: "♻️",
+                description: "Fabricación de empaques biodegradables para la industria alimentaria con tecnología patentada.",
+                goal: 250000,
+                raised: 170000,
+                investors: 156,
+                daysLeft: 15,
+                minInvestment: 5000,
+                status: "activo",
+                returnType: "participacion"
+            },
+            {
+                id: 2,
+                title: "TechEdu Platform",
+                category: "educacion",
+                icon: "💻",
+                description: "Plataforma educativa de programación para Latinoamérica con 50,000 usuarios activos.",
+                goal: 500000,
+                raised: 425000,
+                investors: 243,
+                daysLeft: 8,
+                minInvestment: 10000,
+                status: "activo",
+                returnType: "participacion"
+            },
+            {
+                id: 3,
+                title: "HealthConnect",
+                category: "salud",
+                icon: "🏥",
+                description: "Red de telemedicina que conecta pacientes con especialistas de forma rápida y segura.",
+                goal: 350000,
+                raised: 147000,
+                investors: 89,
+                daysLeft: 22,
+                minInvestment: 7500,
+                status: "activo",
+                returnType: "participacion"
+            },
+            {
+                id: 4,
+                title: "FreshFarm Direct",
+                category: "alimentacion",
+                icon: "🥬",
+                description: "Plataforma que conecta agricultores locales con consumidores, eliminando intermediarios.",
+                goal: 180000,
+                raised: 195000,
+                investors: 312,
+                daysLeft: 0,
+                minInvestment: 2500,
+                status: "finalizado",
+                returnType: "recompensa"
+            },
+            {
+                id: 5,
+                title: "SmartFactory AI",
+                category: "tecnologia",
+                icon: "🤖",
+                description: "Soluciones de inteligencia artificial para optimización de procesos manufactureros.",
+                goal: 750000,
+                raised: 285000,
+                investors: 67,
+                daysLeft: 28,
+                minInvestment: 15000,
+                status: "activo",
+                returnType: "participacion"
+            },
+            {
+                id: 6,
+                title: "GreenEnergy Solutions",
+                category: "sostenibilidad",
+                icon: "☀️",
+                description: "Instalación de paneles solares para pequeñas y medianas empresas con financiamiento.",
+                goal: 450000,
+                raised: 312000,
+                investors: 198,
+                daysLeft: 12,
+                minInvestment: 8000,
+                status: "activo",
+                returnType: "participacion"
+            },
+            {
+                id: 7,
+                title: "MediTrack",
+                category: "salud",
+                icon: "💊",
+                description: "Sistema de gestión de inventario médico y trazabilidad para hospitales y clínicas.",
+                goal: 280000,
+                raised: 98000,
+                investors: 54,
+                daysLeft: 19,
+                minInvestment: 6000,
+                status: "activo",
+                returnType: "participacion"
+            },
+            {
+                id: 8,
+                title: "Artisan Marketplace",
+                category: "comercio",
+                icon: "🎨",
+                description: "Marketplace para artesanos locales con sistema de logística integrado.",
+                goal: 120000,
+                raised: 135000,
+                investors: 287,
+                daysLeft: 0,
+                minInvestment: 1000,
+                status: "finalizado",
+                returnType: "recompensa"
+            },
+            {
+                id: 9,
+                title: "EduKids Lab",
+                category: "educacion",
+                icon: "🧪",
+                description: "Kits educativos STEM para niños de primaria con contenido digital interactivo.",
+                goal: 95000,
+                raised: 42000,
+                investors: 128,
+                daysLeft: 25,
+                minInvestment: 1500,
+                status: "nuevo",
+                returnType: "recompensa"
+            },
+            {
+                id: 10,
+                title: "BioPlastics Innovation",
+                category: "manufactura",
+                icon: "🧬",
+                description: "Producción de bioplásticos a partir de residuos agrícolas para uso industrial.",
+                goal: 600000,
+                raised: 378000,
+                investors: 142,
+                daysLeft: 16,
+                minInvestment: 12000,
+                status: "activo",
+                returnType: "participacion"
+            },
+            {
+                id: 11,
+                title: "CloudKitchen Network",
+                category: "alimentacion",
+                icon: "🍳",
+                description: "Red de cocinas compartidas para emprendedores gastronómicos con delivery integrado.",
+                goal: 320000,
+                raised: 256000,
+                investors: 176,
+                daysLeft: 10,
+                minInvestment: 5000,
+                status: "activo",
+                returnType: "participacion"
+            },
+            {
+                id: 12,
+                title: "CyberShield PYME",
+                category: "tecnologia",
+                icon: "🔒",
+                description: "Suite de ciberseguridad accesible para pequeñas y medianas empresas.",
+                goal: 410000,
+                raised: 189000,
+                investors: 92,
+                daysLeft: 21,
+                minInvestment: 8500,
+                status: "activo",
+                returnType: "participacion"
+            },
+            {
+                id: 13,
+                title: "FitLife Studio",
+                category: "salud",
+                icon: "💪",
+                description: "Cadena de gimnasios boutique con clases personalizadas y tecnología de seguimiento.",
+                goal: 550000,
+                raised: 423000,
+                investors: 234,
+                daysLeft: 7,
+                minInvestment: 10000,
+                status: "activo",
+                returnType: "participacion"
+            },
+            {
+                id: 14,
+                title: "WasteZero",
+                category: "sostenibilidad",
+                icon: "🌍",
+                description: "Sistema de gestión de residuos para empresas con enfoque en economía circular.",
+                goal: 275000,
+                raised: 167000,
+                investors: 103,
+                daysLeft: 18,
+                minInvestment: 6500,
+                status: "activo",
+                returnType: "networking"
+            },
+            {
+                id: 15,
+                title: "LangMaster AI",
+                category: "educacion",
+                icon: "🗣️",
+                description: "Plataforma de aprendizaje de idiomas con IA para práctica conversacional.",
+                goal: 380000,
+                raised: 298000,
+                investors: 187,
+                daysLeft: 11,
+                minInvestment: 7000,
+                status: "activo",
+                returnType: "participacion"
+            },
+            {
+                id: 16,
+                title: "Fashion Circular",
+                category: "comercio",
+                icon: "👗",
+                description: "Plataforma de moda sostenible con ropa de segunda mano de alta calidad.",
+                goal: 165000,
+                raised: 178000,
+                investors: 289,
+                daysLeft: 0,
+                minInvestment: 2000,
+                status: "finalizado",
+                returnType: "recompensa"
+            },
+            {
+                id: 17,
+                title: "3D PrintHub",
+                category: "manufactura",
+                icon: "🖨️",
+                description: "Red de centros de impresión 3D bajo demanda para empresas y diseñadores.",
+                goal: 425000,
+                raised: 198000,
+                investors: 78,
+                daysLeft: 24,
+                minInvestment: 9000,
+                status: "nuevo",
+                returnType: "participacion"
+            },
+            {
+                id: 18,
+                title: "PetCare Plus",
+                category: "salud",
+                icon: "🐾",
+                description: "Clínicas veterinarias con servicios de emergencia 24/7 y telemedicina.",
+                goal: 490000,
+                raised: 367000,
+                investors: 156,
+                daysLeft: 13,
+                minInvestment: 11000,
+                status: "activo",
+                returnType: "participacion"
+            },
+            {
+                id: 19,
+                title: "AgriTech Drones",
+                category: "tecnologia",
+                icon: "🚁",
+                description: "Drones especializados para monitoreo agrícola y fumigación de precisión.",
+                goal: 680000,
+                raised: 425000,
+                investors: 112,
+                daysLeft: 17,
+                minInvestment: 15000,
+                status: "activo",
+                returnType: "participacion"
+            },
+            {
+                id: 20,
+                title: "Urban Garden",
+                category: "sostenibilidad",
+                icon: "🌿",
+                description: "Sistema de huertos verticales automatizados para espacios urbanos reducidos.",
+                goal: 215000,
+                raised: 156000,
+                investors: 143,
+                daysLeft: 14,
+                minInvestment: 4000,
+                status: "activo",
+                returnType: "recompensa"
+            },
+            {
+                id: 21,
+                title: "SkillBoost Academy",
+                category: "educacion",
+                icon: "🎓",
+                description: "Bootcamps intensivos de habilidades digitales con garantía de empleabilidad.",
+                goal: 340000,
+                raised: 289000,
+                investors: 201,
+                daysLeft: 9,
+                minInvestment: 7500,
+                status: "activo",
+                returnType: "networking"
+            },
+            {
+                id: 22,
+                title: "BeverageLab",
+                category: "alimentacion",
+                icon: "🥤",
+                description: "Desarrollo de bebidas funcionales naturales para el mercado latinoamericano.",
+                goal: 295000,
+                raised: 187000,
+                investors: 164,
+                daysLeft: 20,
+                minInvestment: 5500,
+                status: "activo",
+                returnType: "participacion"
+            },
+            {
+                id: 23,
+                title: "RetailTech Suite",
+                category: "comercio",
+                icon: "📊",
+                description: "Software integral de gestión para comercios minoristas con analítica avanzada.",
+                goal: 370000,
+                raised: 234000,
+                investors: 95,
+                daysLeft: 15,
+                minInvestment: 8000,
+                status: "activo",
+                returnType: "participacion"
+            },
+            {
+                id: 24,
+                title: "TextileTech",
+                category: "manufactura",
+                icon: "🧵",
+                description: "Textiles inteligentes con propiedades antibacteriales para uso médico.",
+                goal: 520000,
+                raised: 312000,
+                investors: 87,
+                daysLeft: 23,
+                minInvestment: 13000,
+                status: "nuevo",
+                returnType: "participacion"
+            }
+        ];
+
+        let filteredProjects = [...projects];
+        let currentCategory = 'all';
+
+        function renderProjects(projectsToRender) {
+            const grid = document.getElementById('projectsGrid');
+            const noResults = document.getElementById('noResults');
+            
+            if (projectsToRender.length === 0) {
+                grid.style.display = 'none';
+                noResults.style.display = 'block';
+                document.getElementById('resultsCount').textContent = '0 proyectos encontrados';
+                return;
+            }
+
+            grid.style.display = 'grid';
+            noResults.style.display = 'none';
+            
+            grid.innerHTML = projectsToRender.map(project => {
+                const percentage = Math.round((project.raised / project.goal) * 100);
+                const statusBadge = project.status === 'nuevo' ? 'Nuevo' : 
+                                  project.status === 'finalizado' ? 'Finalizado' : 
+                                  `${project.daysLeft} días`;
+                
+                return `
+                    <div class="project-card" data-category="${project.category}">
+                        <div class="project-header">
+                            <div class="project-icon">${project.icon}</div>
+                            <div class="project-badge">${statusBadge}</div>
+                        </div>
+                        <div class="project-content">
+                            <span class="project-category">${getCategoryName(project.category)}</span>
+                            <h3 class="project-title">${project.title}</h3>
+                            <p class="project-description">${project.description}</p>
+                            
+                            <div class="project-stats">
+                                <div class="stat-item">
+                                    <div class="stat-value">$${(project.raised / 1000).toFixed(0)}K</div>
+                                    <div class="stat-label">Recaudado</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">${project.investors}</div>
+                                    <div class="stat-label">Inversores</div>
+                                </div>
+                            </div>
+                            
+                            <div class="progress-section">
+                                <div class="progress-info">
+                                    <span><strong>${percentage}%</strong> financiado</span>
+                                    <span>Meta: $${(project.goal / 1000).toFixed(0)}K</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${Math.min(percentage, 100)}%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="project-footer">
+                                <button class="btn-primary" onclick="investProject(${project.id})">
+                                    Invertir desde $${(project.minInvestment / 1000).toFixed(1)}K
+                                </button>
+                                <button class="btn-secondary" onclick="viewDetails(${project.id})">
+                                    📋
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('resultsCount').textContent = 
+                `${projectsToRender.length} proyecto${projectsToRender.length !== 1 ? 's' : ''} encontrado${projectsToRender.length !== 1 ? 's' : ''}`;
+        }
+
+        function getCategoryName(category) {
+            const names = {
+                tecnologia: '💻 Tecnología',
+                salud: '🏥 Salud',
+                sostenibilidad: '🌱 Sostenibilidad',
+                educacion: '📚 Educación',
+                alimentacion: '🍽️ Alimentación',
+                comercio: '🛍️ Comercio',
+                manufactura: '🏭 Manufactura'
+            };
+            return names[category] || category;
+        }
+
+        function filterByCategory(category, button) {
+            currentCategory = category;
+            
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            button.classList.add('active');
+            
+            filterProjects();
+        }
+
+        function filterProjects() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const minInvestment = document.getElementById('minInvestment').value;
+            const status = document.getElementById('statusFilter').value;
+            const returnType = document.getElementById('returnType').value;
+
+            filteredProjects = projects.filter(project => {
+                const matchesCategory = currentCategory === 'all' || project.category === currentCategory;
+                const matchesSearch = project.title.toLowerCase().includes(searchTerm) || 
+                                    project.description.toLowerCase().includes(searchTerm);
+                const matchesMinInvestment = minInvestment === 'all' || project.minInvestment >= parseInt(minInvestment);
+                const matchesStatus = status === 'all' || project.status === status;
+                const matchesReturn = returnType === 'all' || project.returnType === returnType;
+
+                return matchesCategory && matchesSearch && matchesMinInvestment && matchesStatus && matchesReturn;
+            });
+
+            sortProjects();
+        }
+
+        function sortProjects() {
+            const sortBy = document.getElementById('sortBy').value;
+            
+            let sorted = [...filteredProjects];
+            
+            switch(sortBy) {
+                case 'recent':
+                    sorted.sort((a, b) => a.id - b.id);
+                    break;
+                case 'ending':
+                    sorted = sorted.filter(p => p.status === 'activo')
+                                 .sort((a, b) => a.daysLeft - b.daysLeft)
+                                 .concat(sorted.filter(p => p.status !== 'activo'));
+                    break;
+                case 'funded':
+                    sorted.sort((a, b) => (b.raised / b.goal) - (a.raised / a.goal));
+                    break;
+                case 'popular':
+                    sorted.sort((a, b) => b.investors - a.investors);
+                    break;
+                default:
+                    break;
+            }
+            
+            renderProjects(sorted);
+        }
+
+        function investProject(id) {
+            const project = projects.find(p => p.id === id);
+            alert(`¡Excelente elección! Estás a punto de invertir en "${project.title}".\n\nMonto mínimo: ${project.minInvestment.toLocaleString()}\nRetorno: ${getReturnTypeName(project.returnType)}`);
+        }
+
+        function viewDetails(id) {
+            const project = projects.find(p => p.id === id);
+            alert(`Detalles de "${project.title}":\n\n${project.description}\n\nCategoría: ${getCategoryName(project.category)}\nMeta: ${project.goal.toLocaleString()}\nRecaudado: ${project.raised.toLocaleString()}\nInversores: ${project.investors}\nDías restantes: ${project.daysLeft}\nInversión mínima: ${project.minInvestment.toLocaleString()}`);
+        }
+
+        function getReturnTypeName(type) {
+            const names = {
+                recompensa: 'Recompensas',
+                participacion: 'Participación accionaria',
+                networking: 'Networking exclusivo'
+            };
+            return names[type] || type;
+        }
+
+        // Detectar Enter en el campo de búsqueda
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    filterProjects();
+                }
+            });
+
+            // Renderizar proyectos iniciales
+            renderProjects(projects);
+        });
+    </script>
+</body>
+</html>
