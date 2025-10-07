@@ -968,8 +968,9 @@
         }
 
         function viewDetails(id) {
-            const project = projects.find(p => p.id === id);
-            alert(`Detalles de "${project.title}":\n\n${project.description}\n\nCategoría: ${getCategoryName(project.category)}\nMeta: ${project.goal.toLocaleString()}\nRecaudado: ${project.raised.toLocaleString()}\nInversores: ${project.investors}\nDías restantes: ${project.daysLeft}\nInversión mínima: ${project.minInvestment.toLocaleString()}`);
+            // const project = projects.find(p => p.id === id);
+            // alert(`Detalles de "${project.title}":\n\n${project.description}\n\nCategoría: ${getCategoryName(project.category)}\nMeta: ${project.goal.toLocaleString()}\nRecaudado: ${project.raised.toLocaleString()}\nInversores: ${project.investors}\nDías restantes: ${project.daysLeft}\nInversión mínima: ${project.minInvestment.toLocaleString()}`);
+            window.location.href = 'chat.html';
         }
 
         function getReturnTypeName(type) {
